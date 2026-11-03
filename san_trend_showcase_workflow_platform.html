@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full bg-slate-900 text-slate-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SAN Trend Showcase & Interactive Workflow</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0f6ff',
+              100: '#e0edff',
+              400: '#3882f6',
+              500: '#1d64ec',
+              600: '#0247d8',
+              900: '#0b193d'
+            },
+            accent: {
+              cyan: '#06b6d4',
+              purple: '#8b5cf6',
+              emerald: '#10b981',
+              amber: '#f59e0b'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card-hover:hover {
+      background: rgba(30, 41, 59, 0.9);
+      border-color: rgba(56, 130, 246, 0.4);
+      box-shadow: 0 10px 25px -5px rgba(56, 130, 246, 0.15);
+    }
+    .pulse-glow {
+      box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+    }
+  </style>
+</head>
+<body class="h-full flex flex-col font-sans antialiased selection:bg-brand-500 selection:text-white">
+
+  <!-- TOP NAVIGATION HEADER -->
+  <header class="sticky top-0 z-50 glass-card border-b border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <!-- Logo / Title -->
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="scrollToSection('hero')">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 via-accent-purple to-accent-cyan flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-brand-500/20">
+          <i class="fa-solid me-0 fa-layer-group"></i>
+        </div>
+        <div>
+          <span class="text-xl font-extrabold bg-gradient-to-r from-white via-slate-200 to-brand-400 bg-clip-text text-transparent">SAN TrendHub</span>
+          <span class="hidden sm:inline-block text-xs ml-2 px-2 py-0.5 rounded-full bg-brand-500/10 text-brand-400 border border-brand-500/20 font-medium">Interactive 2026</span>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="hidden md:flex items-center space-x-1">
+        <button onclick="scrollToSection('workflow')" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-colors">
+          <i class="fa-solid fa-diagram-project mr-1.5 text-accent-cyan"></i>Quy Trình (Workflow)
+        </button>
+        <button onclick="scrollToSection('showcase')" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-colors">
+          <i class="fa-solid fa-fire mr-1.5 text-accent-amber"></i>Xu Hướng SAN
+        </button>
+        <button onclick="scrollToSection('community')" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-colors">
+          <i class="fa-solid fa-comments mr-1.5 text-accent-purple"></i>Đóng Góp & Thảo Luận
+        </button>
+      </nav>
+
+      <!-- Quick Action Stats / User Interactive Badge -->
+      <div class="flex items-center space-x-3">
+        <div class="hidden sm:flex items-center space-x-2 text-xs bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700">
+          <span class="w-2 h-2 rounded-full bg-accent-emerald animate-pulse"></span>
+          <span class="text-slate-400">Trạng Thái: <strong class="text-slate-200">Trực Tuyến</strong></span>
+        </div>
+        <button onclick="openAddTrendModal()" class="px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-brand-500 to-accent-cyan rounded-xl hover:opacity-90 transition-all shadow-md shadow-brand-500/20 flex items-center space-x-1.5">
+          <i class="fa-solid fa-plus"></i>
+          <span>Thêm Xu Hướng</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT AREA -->
+  <main class="flex-grow">
+    
+    <!-- HERO SECTION -->
+    <section id="hero" class="relative py-16 sm:py-24 overflow-hidden border-b border-slate-800/60">
+      <div class="absolute inset-0 -z-10 opacity-30">
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-brand-600/40 to-accent-purple/30 rounded-full blur-3xl"></div>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-slate-800/80 border border-slate-700 text-slate-300 text-xs sm:text-sm font-medium mb-6">
+          <span class="px-2 py-0.5 rounded-full bg-accent-cyan/20 text-accent-cyan text-xs font-bold">MỚI</span>
+          <span>Khám Phá Toàn Diện Hệ Sinh Thái & Quy Trình SAN Trend 2026</span>
+        </div>
+        
+        <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white max-w-4xl mx-auto leading-tight">
+          Nền Tảng Trực Quan Hóa & Phân Tích <span class="bg-gradient-to-r from-brand-400 via-accent-cyan to-accent-purple bg-clip-text text-transparent">SAN Trends</span>
+        </h1>
+        
+        <p class="mt-6 text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+          Theo dõi quy trình phát triển, tương tác trực tiếp với các xu hướng công nghệ & chiến lược mới nhất của dự án SAN.
+        </p>
+
+        <!-- Dynamic Counter Row -->
+        <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
+          <div class="glass-card p-4 rounded-2xl border border-slate-800">
+            <div class="text-2xl sm:text-3xl font-extrabold text-brand-400" id="stat-trends-count">6</div>
+            <div class="text-xs text-slate-400 mt-1">Xu Hướng Nổi Bật</div>
+          </div>
+          <div class="glass-card p-4 rounded-2xl border border-slate-800">
+            <div class="text-2xl sm:text-3xl font-extrabold text-accent-cyan" id="stat-votes-count">1,482</div>
+            <div class="text-xs text-slate-400 mt-1">Lượt Bình Chọn</div>
+          </div>
+          <div class="glass-card p-4 rounded-2xl border border-slate-800">
+            <div class="text-2xl sm:text-3xl font-extrabold text-accent-purple" id="stat-workflow-steps">5</div>
+            <div class="text-xs text-slate-400 mt-1">Bước Quy Trình SAN</div>
+          </div>
+          <div class="glass-card p-4 rounded-2xl border border-slate-800">
+            <div class="text-2xl sm:text-3xl font-extrabold text-accent-emerald" id="stat-notes-count">12</div>
+            <div class="text-xs text-slate-400 mt-1">Ý Kiến Đóng Góp</div>
+          </div>
+        </div>
+
+        <div class="mt-10 flex flex-wrap justify-center gap-4">
+          <button onclick="scrollToSection('workflow')" class="px-6 py-3 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold shadow-lg shadow-brand-600/30 transition-all">
+            <i class="fa-solid fa-network-wired mr-2"></i>Xem Quy Trình Workflow
+          </button>
+          <button onclick="scrollToSection('showcase')" class="px-6 py-3 rounded-xl glass-card hover:bg-slate-800 text-slate-200 font-semibold border border-slate-700 transition-all">
+            <i class="fa-solid fa-compass mr-2"></i>Khám Phá Các Xu Hướng
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 1: DYNAMIC WORKFLOW VISUALIZATION -->
+    <section id="workflow" class="py-16 bg-slate-950/60 border-b border-slate-800/60">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-10">
+          <div>
+            <div class="text-accent-cyan text-sm font-semibold tracking-wider uppercase mb-2">Trực Quan Hóa Tương Tác</div>
+            <h2 class="text-3xl font-bold text-white">Quy Trình Vận Hành SAN Workflow</h2>
+          </div>
+          <p class="text-slate-400 text-sm max-w-md mt-2 md:mt-0">
+            Nhấp vào từng giai đoạn trong sơ đồ để khám phá chi tiết các tác vụ, công cụ và kết quả đầu ra.
+          </p>
+        </div>
+
+        <!-- Interactive Workflow Map Stepper -->
+        <div class="glass-card p-6 rounded-3xl border border-slate-800 mb-8">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 relative">
+            
+            <!-- Step 1 -->
+            <button onclick="selectWorkflowStep(1)" id="wf-btn-1" class="wf-step-btn text-left p-4 rounded-2xl border border-brand-500/50 bg-brand-500/10 transition-all duration-300 relative group">
+              <div class="flex items-center justify-between mb-3">
+                <span class="w-8 h-8 rounded-lg bg-brand-500 text-white flex items-center justify-center font-bold text-sm">01</span>
+                <i class="fa-solid fa-magnifying-glass text-brand-400 text-lg"></i>
+              </div>
+              <h3 class="font-bold text-white text-base">Thu Thập Dữ Liệu</h3>
+              <p class="text-xs text-slate-400 mt-1 line-clamp-2">Thu thập thông tin thị trường, hành vi người dùng & xu hướng mới.</p>
+              <div class="active-indicator absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-brand-500 rotate-45 rounded-sm"></div>
+            </button>
+
+            <!-- Step 2 -->
+            <button onclick="selectWorkflowStep(2)" id="wf-btn-2" class="wf-step-btn text-left p-4 rounded-2xl border border-slate-800 bg-slate-900/60 hover:border-slate-700 transition-all duration-300 relative group">
+              <div class="flex items-center justify-between mb-3">
+                <span class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 flex items-center justify-center font-bold text-sm">02</span>
+                <i class="fa-solid fa-microchip text-accent-cyan text-lg"></i>
+              </div>
+              <h3 class="font-bold text-white text-base">Phân Tích & Lọc</h3>
+              <p class="text-xs text-slate-400 mt-1 line-clamp-2">Sử dụng AI & mô hình SAN để phân loại tín hiệu thực tế.</p>
+              <div class="active-indicator hidden absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-accent-cyan rotate-45 rounded-sm"></div>
+            </button>
+
+            <!-- Step 3 -->
+            <button onclick="selectWorkflowStep(3)" id="wf-btn-3" class="wf-step-btn text-left p-4 rounded-2xl border border-slate-800 bg-slate-900/60 hover:border-slate-700 transition-all duration-300 relative group">
+              <div class="flex items-center justify-between mb-3">
+                <span class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 flex items-center justify-center font-bold text-sm">03</span>
+                <i class="fa-solid fa-pen-ruler text-accent-purple text-lg"></i>
+              </div>
+              <h3 class="font-bold text-white text-base">Thiết Kế Mô Hình</h3>
+              <p class="text-xs text-slate-400 mt-1 line-clamp-2">Xây dựng kiến trúc giải pháp, Prototype và UI/UX.</p>
+              <div class="active-indicator hidden absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-accent-purple rotate-45 rounded-sm"></div>
+            </button>
+
+            <!-- Step 4 -->
+            <button onclick="selectWorkflowStep(4)" id="wf-btn-4" class="wf-step-btn text-left p-4 rounded-2xl border border-slate-800 bg-slate-900/60 hover:border-slate-700 transition-all duration-300 relative group">
+              <div class="flex items-center justify-between mb-3">
+                <span class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 flex items-center justify-center font-bold text-sm">04</span>
+                <i class="fa-solid fa-rocket text-accent-emerald text-lg"></i>
+              </div>
+              <h3 class="font-bold text-white text-base">Triển Khai Demo</h3>
+              <p class="text-xs text-slate-400 mt-1 line-clamp-2">Phát hành bản thử nghiệm public cho người dùng đánh giá.</p>
+              <div class="active-indicator hidden absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-accent-emerald rotate-45 rounded-sm"></div>
+            </button>
+
+            <!-- Step 5 -->
+            <button onclick="selectWorkflowStep(5)" id="wf-btn-5" class="wf-step-btn text-left p-4 rounded-2xl border border-slate-800 bg-slate-900/60 hover:border-slate-700 transition-all duration-300 relative group">
+              <div class="flex items-center justify-between mb-3">
+                <span class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 flex items-center justify-center font-bold text-sm">05</span>
+                <i class="fa-solid fa-rotate text-accent-amber text-lg"></i>
+              </div>
+              <h3 class="font-bold text-white text-base">Đánh Giá & Tối Ưu</h3>
+              <p class="text-xs text-slate-400 mt-1 line-clamp-2">Thu thập phản hồi cộng đồng để nâng cấp liên tục.</p>
+              <div class="active-indicator hidden absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-accent-amber rotate-45 rounded-sm"></div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Active Step Detailed View Panel -->
+        <div id="wf-detail-panel" class="glass-card p-6 sm:p-8 rounded-3xl border border-slate-800 bg-slate-900/90 relative overflow-hidden">
+          <!-- Dynamic Content Rendered via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: TREND SHOWCASE & FILTERING -->
+    <section id="showcase" class="py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+          <div>
+            <div class="text-brand-400 text-sm font-semibold tracking-wider uppercase mb-1">Danh Mục Xu Hướng</div>
+            <h2 class="text-3xl font-bold text-white">SAN Trends 2026 Showcase</h2>
+          </div>
+
+          <!-- Controls: Search & Category Filter -->
+          <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+            <!-- Search Bar -->
+            <div class="relative flex-grow sm:w-64">
+              <i class="fa-solid fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+              <input type="text" id="trend-search-input" oninput="filterTrends()" placeholder="Tìm kiếm xu hướng..." class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-800/90 border border-slate-700 text-slate-200 placeholder-slate-500 text-sm focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all">
+            </div>
+
+            <!-- Category Filter Buttons -->
+            <div class="flex items-center space-x-1 bg-slate-800/80 p-1 rounded-xl border border-slate-700 overflow-x-auto">
+              <button onclick="setCategoryFilter('all')" id="cat-btn-all" class="cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-brand-500 text-white transition-all">Tất Cả</button>
+              <button onclick="setCategoryFilter('AI & Automation')" id="cat-btn-ai" class="cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-all whitespace-nowrap">AI & Automation</button>
+              <button onclick="setCategoryFilter('UI/UX Architecture')" id="cat-btn-ui" class="cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-all whitespace-nowrap">UI/UX Architecture</button>
+              <button onclick="setCategoryFilter('Data & Cloud')" id="cat-btn-data" class="cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-all whitespace-nowrap">Data & Cloud</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trends Grid Container -->
+        <div id="trends-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Dynamic Trend Cards Inserted via JS -->
+        </div>
+
+        <!-- Empty State Message -->
+        <div id="no-trends-msg" class="hidden text-center py-16 glass-card rounded-3xl border border-slate-800">
+          <i class="fa-solid fa-ghost text-4xl text-slate-600 mb-3"></i>
+          <h3 class="text-lg font-bold text-slate-300">Không tìm thấy xu hướng phù hợp</h3>
+          <p class="text-sm text-slate-500 mt-1">Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc danh mục.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: COMMUNITY ENGAGEMENT & FEEDBACK -->
+    <section id="community" class="py-16 bg-slate-950/60 border-t border-slate-800/60">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+          <!-- Left 1 Col: Input Form for Custom Notes -->
+          <div class="glass-card p-6 sm:p-8 rounded-3xl border border-slate-800">
+            <h3 class="text-xl font-bold text-white flex items-center space-x-2">
+              <i class="fa-solid fa-paper-plane text-brand-400"></i>
+              <span>Gửi Đóng Góp / Phản Hồi</span>
+            </h3>
+            <p class="text-slate-400 text-xs mt-1 mb-6">Ý kiến của bạn sẽ giúp hoàn thiện hệ thống SAN Trend trong các phiên bản kế tiếp.</p>
+
+            <form id="note-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Tên / Biệt danh của bạn</label>
+                <input type="text" id="form-author" required placeholder="Ví dụ: Alex Nguyễn" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-sm focus:outline-none focus:border-brand-500">
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Chủ đề liên quan</label>
+                <select id="form-topic" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-sm focus:outline-none focus:border-brand-500">
+                  <option value="Workflow Feedback">Góp ý Quy trình (Workflow)</option>
+                  <option value="New Trend Idea">Đề xuất Xu hướng mới</option>
+                  <option value="UI/UX Enhancement">Cải tiến Cấu trúc & Giao diện</option>
+                  <option value="General Query">Thắc mắc chung</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Nội dung chia sẻ</label>
+                <textarea id="form-content" required rows="4" placeholder="Chia sẻ góc nhìn hoặc phản hồi chi tiết của bạn..." class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-sm focus:outline-none focus:border-brand-500 resize-none"></textarea>
+              </div>
+
+              <button type="submit" class="w-full py-3 bg-gradient-to-r from-brand-600 to-accent-cyan hover:opacity-90 text-white font-semibold rounded-xl text-sm transition-all shadow-md shadow-brand-500/20">
+                Gửi Đóng Góp Ngay
+              </button>
+            </form>
+          </div>
+
+          <!-- Right 2 Cols: Live Feedback Feed -->
+          <div class="lg:col-span-2 glass-card p-6 sm:p-8 rounded-3xl border border-slate-800 flex flex-col">
+            <div class="flex items-center justify-between mb-6">
+              <div>
+                <h3 class="text-xl font-bold text-white flex items-center space-x-2">
+                  <i class="fa-solid fa-comments text-accent-purple"></i>
+                  <span>Thảo Luận Cộng Đồng Trực Tuyến</span>
+                </h3>
+                <p class="text-xs text-slate-400 mt-1">Cập nhật phản hồi mới nhất từ người dùng trên toàn hệ thống.</p>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-slate-800 text-xs font-medium text-slate-300 border border-slate-700" id="notes-badge-count">12 phản hồi</span>
+            </div>
+
+            <!-- Notes List Container -->
+            <div id="notes-container" class="space-y-4 overflow-y-auto max-h-[420px] pr-2">
+              <!-- Rendered Dynamically via JS -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: ADD CUSTOM TREND -->
+  <div id="add-trend-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+    <div class="glass-card w-full max-w-lg p-6 sm:p-8 rounded-3xl border border-slate-700 shadow-2xl relative animate-fade-in">
+      
+      <button onclick="closeAddTrendModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="flex items-center space-x-3 mb-6">
+        <div class="w-10 h-10 rounded-xl bg-brand-500/20 border border-brand-500/40 text-brand-400 flex items-center justify-center">
+          <i class="fa-solid fa-lightbulb text-lg"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-white">Đề Xuất Xu Hướng SAN Mới</h3>
+          <p class="text-xs text-slate-400">Thêm xu hướng công nghệ bạn quan tâm vào hệ thống.</p>
+        </div>
+      </div>
+
+      <form onsubmit="handleTrendSubmit(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Tên Xu Hướng</label>
+          <input type="text" id="new-trend-title" required placeholder="Ví dụ: Agentic AI Orchestration" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-sm focus:outline-none focus:border-brand-500">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Phân Loại</label>
+          <select id="new-trend-cat" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-sm focus:outline-none focus:border-brand-500">
+            <option value="AI & Automation">AI & Automation</option>
+            <option value="UI/UX Architecture">UI/UX Architecture</option>
+            <option value="Data & Cloud">Data & Cloud</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Mô Tả Ngắn</label>
+          <textarea id="new-trend-desc" required rows="3" placeholder="Tóm tắt tác động và tiềm năng của xu hướng này..." class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-sm focus:outline-none focus:border-brand-500 resize-none"></textarea>
+        </div>
+
+        <div class="pt-2 flex justify-end space-x-3">
+          <button type="button" onclick="closeAddTrendModal()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-semibold transition-all">Hủy Bỏ</button>
+          <button type="submit" class="px-5 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-400 text-white text-sm font-semibold transition-all shadow-md shadow-brand-500/30">Đăng Xu Hướng</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 hidden flex items-center space-x-3 bg-slate-800 border border-slate-700 text-white px-4 py-3 rounded-2xl shadow-xl transition-all duration-300">
+    <div id="toast-icon-box" class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm">
+      <i class="fa-solid fa-check"></i>
+    </div>
+    <span id="toast-message" class="text-sm font-medium">Thông báo</span>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="glass-card border-t border-slate-800 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center space-x-3">
+        <div class="w-7 h-7 rounded-lg bg-brand-500 flex items-center justify-center text-white text-xs font-bold">SAN</div>
+        <span class="text-xs text-slate-400">© 2026 SAN Trend Platform. Công Khai & Tương Tác Trực Tiếp.</span>
+      </div>
+      <div class="flex space-x-4 text-slate-400 text-xs">
+        <button onclick="showToast('Hệ thống cập nhật tự động!', 'info')" class="hover:text-white transition-colors">Điều Khoản</button>
+        <button onclick="showToast('Đang kết nối API SAN Cloud.', 'info')" class="hover:text-white transition-colors">Tài Liệu API</button>
+        <button onclick="scrollToSection('hero')" class="hover:text-white transition-colors">Về Đầu Trang</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    /* ==========================================
+       DATA MODELS & INITIAL STATE
+       ========================================== */
+    const workflowSteps = {
+      1: {
+        number: "01",
+        title: "Thu Thập & Khai Thác Dữ Liệu Market Data",
+        subtitle: "Thu thập tín hiệu đầu vào từ hệ sinh thái công nghệ & thị trường",
+        color: "brand",
+        icon: "fa-magnifying-glass",
+        description: "Giai đoạn đầu tiên tập trung quét liên tục các nguồn thông tin toàn cầu, bao gồm xu hướng tìm kiếm, repository open-source, và nhu cầu doanh nghiệp để trích xuất tín hiệu thô.",
+        tasks: [
+          "Quét dữ liệu tự động từ các nền tảng kỹ thuật số.",
+          "Phân tích nhu cầu thực tế của người dùng SAN.",
+          "Lọc bỏ dữ liệu nhiễu và gom nhóm thông tin sơ bộ."
+        ],
+        outputs: "Tập dữ liệu thô (Raw Signal Insights dataset)."
+      },
+      2: {
+        number: "02",
+        title: "Phân Tích AI & Lọc Tín Hiệu (Signal Filtering)",
+        subtitle: "Đánh giá mức độ khả thi và tính ứng dụng của xu hướng",
+        color: "accent-cyan",
+        icon: "fa-microchip",
+        description: "Ứng dụng các thuật toán máy học và mô hình SAN AI nhằm chấm điểm tiềm năng, dự báo vòng đời và lựa chọn các xu hướng mang lại giá trị thiết thực nhất.",
+        tasks: [
+          "Chấm điểm độ ưu tiên xu hướng theo mô hình SAN Index.",
+          "Phân tích ma trận rủi ro và chi phí triển khai.",
+          "Tổng hợp báo cáo khả thi cho từng giải pháp."
+        ],
+        outputs: "Danh sách Xu Hướng Đã Xác Minh (Verified SAN Trends)."
+      },
+      3: {
+        number: "03",
+        title: "Thiết Kế Kiến Trúc & Prototype Demo",
+        subtitle: "Hiện thực hóa ý tưởng thành mô hình trải nghiệm trực quan",
+        color: "accent-purple",
+        icon: "fa-pen-ruler",
+        description: "Biến các phân tích thành mô hình trực quan, thiết kế giao diện UI/UX tương tác và đóng gói các phiên bản thử nghiệm có thể trải nghiệm ngay.",
+        tasks: [
+          "Xây dựng wireframe & giao diện người dùng tối ưu.",
+          "Lập trình module tương tác công khai.",
+          "Kiểm thử tính tương thích trên mọi thiết bị."
+        ],
+        outputs: "Bản Demo Tương Tác Công Khai (Interactive Web Demo)."
+      },
+      4: {
+        number: "04",
+        title: "Triển Khai Public Showcase & Thu Thuật Ý Kiến",
+        subtitle: "Đưa sản phẩm ra cộng đồng để kiểm chứng thực tế",
+        color: "accent-emerald",
+        icon: "fa-rocket",
+        description: "Công khai nền tảng cho toàn bộ cộng đồng trải nghiệm, tham gia bình chọn, upvote và đóng góp phản hồi trực tiếp.",
+        tasks: [
+          "Phát hành bản công khai trên môi trường Web.",
+          "Mở cổng bình chọn & đóng góp ý kiến theo thời gian thực.",
+          "Ghi nhận thống kê tương tác người dùng."
+        ],
+        outputs: "Dữ liệu phản hồi & đánh giá thực tế từ người dùng."
+      },
+      5: {
+        number: "05",
+        title: "Đánh Giá, Tối Ưu & Tích Hợp Hệ Thống",
+        subtitle: "Hoàn thiện và đưa xu hướng vào vận hành sản xuất",
+        color: "accent-amber",
+        icon: "fa-rotate",
+        description: "Dựa trên dữ liệu bình chọn và phản hồi từ cộng đồng, đội ngũ phát triển tiến hành tối ưu hóa code, nâng cấp tính năng và tích hợp chính thức.",
+        tasks: [
+          "Tổng hợp dữ liệu Upvote & Feedback từ cộng đồng.",
+          "Sửa lỗi và tối ưu hóa hiệu năng ứng dụng.",
+          "Chuyển giao và tích hợp vào hệ thống SAN Core."
+        ],
+        outputs: "Tính năng / Xu hướng hoàn thiện tích hợp chính thức."
+      }
+    };
+
+    let trendsData = [
+      {
+        id: "trend-1",
+        title: "Agentic AI Orchestration",
+        category: "AI & Automation",
+        status: "Đang Triển Khai",
+        statusColor: "emerald",
+        upvotes: 412,
+        userVoted: false,
+        desc: "Hệ thống AI tự chủ có khả năng phối hợp nhiều agent thông minh để tự động hóa quy trình phức tạp mà không cần can thiệp thủ công.",
+        details: "Tích hợp mô hình SAN Core AI giúp giảm 65% thời gian xử lý dữ liệu đầu vào."
+      },
+      {
+        id: "trend-2",
+        title: "Micro-Frontend Modular Architecture",
+        category: "UI/UX Architecture",
+        status: "Thử Nghiệm",
+        statusColor: "amber",
+        upvotes: 289,
+        userVoted: false,
+        desc: "Chia nhỏ ứng dụng giao diện thành các module độc lập, giúp tăng tốc độ tải trang và khả năng nâng cấp từng phần mượt mà.",
+        details: "Đã thử nghiệm thành công trên 4 dự án thành phần với thời gian render giảm 40%."
+      },
+      {
+        id: "trend-3",
+        title: "Zero-Trust Data Mesh",
+        category: "Data & Cloud",
+        status: "Nghiên Cứu",
+        statusColor: "purple",
+        upvotes: 195,
+        userVoted: false,
+        desc: "Mô hình quản trị dữ liệu phân tán với bảo mật Zero-Trust nâng cao, đảm bảo toàn vẹn thông tin trên đám mây.",
+        details: "Đang hoàn thiện tài liệu kỹ thuật và ma trận kiểm soát truy cập."
+      },
+      {
+        id: "trend-4",
+        title: "Real-time Vector Search Engine",
+        category: "Data & Cloud",
+        status: "Đang Triển Khai",
+        statusColor: "emerald",
+        upvotes: 340,
+        userVoted: false,
+        desc: "Công cụ truy vấn dữ liệu theo ngữ nghĩa dựa trên Vector Embedding, phản hồi dưới 50ms cho truy vấn phức tạp.",
+        details: "Hỗ trợ tìm kiếm thông minh trực tiếp trong hệ thống lưu trữ SAN Hub."
+      },
+      {
+        id: "trend-5",
+        title: "Adaptive Dark Mode & Glassmorphism UI",
+        category: "UI/UX Architecture",
+        status: "Hoàn Thành",
+        statusColor: "cyan",
+        upvotes: 156,
+        userVoted: false,
+        desc: "Phong cách thiết kế hiện đại kết hợp hiệu ứng kính mờ và màu sắc tối ưu theo thói quen người dùng.",
+        details: "Đã áp dụng toàn diện trên giao diện Web App công khai hiện tại."
+      },
+      {
+        id: "trend-6",
+        title: "Edge AI Signal Processing",
+        category: "AI & Automation",
+        status: "Thử Nghiệm",
+        statusColor: "amber",
+        upvotes: 90,
+        userVoted: false,
+        desc: "Xử lý tín hiệu dữ liệu trực tiếp tại thiết bị đầu cuối (Edge Device) trước khi đồng bộ về cloud trung tâm.",
+        details: "Giúp tối ưu băng thông đường truyền và tăng tốc phản hồi thời gian thực."
+      }
+    ];
+
+    let communityNotes = [
+      {
+        id: "note-1",
+        author: "Minh Tuấn (AI Engineer)",
+        topic: "New Trend Idea",
+        content: "Nên cân nhắc bổ sung thêm giải pháp Local LLM Quantization vào danh mục AI & Automation để tối ưu chi phí hạ tầng.",
+        time: "10 phút trước",
+        likes: 14
+      },
+      {
+        id: "note-2",
+        author: "Hoàng Yến (Product Designer)",
+        topic: "UI/UX Enhancement",
+        content: "Giao diện Workflow ở Bước 3 rất trực quan! Nếu thêm đường nối hoạt họa (animated connectors) sẽ đẹp mắt hơn nữa.",
+        time: "1 giờ trước",
+        likes: 8
+      },
+      {
+        id: "note-3",
+        author: "Đức Anh (DevOps)",
+        topic: "Workflow Feedback",
+        content: "Quy trình 5 bước được phân chia rất hợp lý. Bước Triển khai Demo giúp Dev và User dễ dàng đóng góp ý kiến trực tiếp.",
+        time: "3 giờ trước",
+        likes: 22
+      }
+    ];
+
+    let currentCategory = 'all';
+
+    /* ==========================================
+       INITIALIZATION & EVENT LISTENERS
+       ========================================== */
+    window.onload = function() {
+      selectWorkflowStep(1);
+      renderTrends();
+      renderNotes();
+      updateGlobalStats();
+    };
+
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    /* ==========================================
+       WORKFLOW STEPPER LOGIC
+       ========================================== */
+    function selectWorkflowStep(stepNum) {
+      const data = workflowSteps[stepNum];
+      if (!data) return;
+
+      // Update Active Button Classes
+      for (let i = 1; i <= 5; i++) {
+        const btn = document.getElementById(`wf-btn-${i}`);
+        const indicator = btn.querySelector('.active-indicator');
+        if (i === stepNum) {
+          btn.className = `wf-step-btn text-left p-4 rounded-2xl border border-brand-500/60 bg-brand-500/10 shadow-lg shadow-brand-500/10 transition-all duration-300 relative group`;
+          if (indicator) indicator.classList.remove('hidden');
+        } else {
+          btn.className = `wf-step-btn text-left p-4 rounded-2xl border border-slate-800 bg-slate-900/60 hover:border-slate-700 transition-all duration-300 relative group`;
+          if (indicator) indicator.classList.add('hidden');
+        }
+      }
+
+      // Render Detail View
+      const detailContainer = document.getElementById('wf-detail-panel');
+      detailContainer.innerHTML = `
+        <div class="flex flex-col md:flex-row gap-6 justify-between items-start">
+          <div class="space-y-4 max-w-2xl">
+            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-brand-500/20 text-brand-400 border border-brand-500/30 text-xs font-bold">
+              <span>GIAI ĐOẠN ${data.number}</span>
+            </div>
+            
+            <h3 class="text-2xl font-extrabold text-white">${data.title}</h3>
+            <p class="text-sm font-medium text-accent-cyan">${data.subtitle}</p>
+            <p class="text-slate-300 text-sm leading-relaxed">${data.description}</p>
+
+            <div class="pt-2">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Các Tác Vụ Trọng Tâm:</h4>
+              <ul class="space-y-2">
+                ${data.tasks.map(t => `
+                  <li class="flex items-start text-xs sm:text-sm text-slate-300">
+                    <i class="fa-solid fa-circle-check text-accent-emerald mt-1 mr-2.5 shrink-0"></i>
+                    <span>${t}</span>
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+          </div>
+
+          <div class="w-full md:w-80 glass-card p-5 rounded-2xl border border-slate-800 bg-slate-900/80 space-y-4">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-xl bg-brand-500/20 text-brand-400 flex items-center justify-center text-xl">
+                <i class="fa-solid ${data.icon}"></i>
+              </div>
+              <div>
+                <div class="text-xs text-slate-400">Kết quả đầu ra (Output)</div>
+                <div class="text-sm font-bold text-slate-200">Bàn giao chính</div>
+              </div>
+            </div>
+
+            <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 text-xs font-mono text-accent-cyan">
+              <i class="fa-solid fa-file-export mr-1.5 text-slate-500"></i>
+              ${data.outputs}
+            </div>
+
+            <button onclick="showToast('Đang mở tài liệu quy trình chi tiết...', 'info')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-all flex items-center justify-center space-x-2">
+              <i class="fa-solid fa-book-open"></i>
+              <span>Xem Tài Liệu Hướng Dẫn</span>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    /* ==========================================
+       TREND SHOWCASE & FILTER LOGIC
+       ========================================== */
+    function setCategoryFilter(cat) {
+      currentCategory = cat;
+      
+      // Update Filter UI buttons
+      const btnAll = document.getElementById('cat-btn-all');
+      const btnAi = document.getElementById('cat-btn-ai');
+      const btnUi = document.getElementById('cat-btn-ui');
+      const btnData = document.getElementById('cat-btn-data');
+
+      const allBtns = [btnAll, btnAi, btnUi, btnData];
+      allBtns.forEach(b => {
+        b.className = "cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-all whitespace-nowrap";
+      });
+
+      if(cat === 'all') btnAll.className = "cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-brand-500 text-white transition-all";
+      if(cat === 'AI & Automation') btnAi.className = "cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-brand-500 text-white transition-all";
+      if(cat === 'UI/UX Architecture') btnUi.className = "cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-brand-500 text-white transition-all";
+      if(cat === 'Data & Cloud') btnData.className = "cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-brand-500 text-white transition-all";
+
+      filterTrends();
+    }
+
+    function filterTrends() {
+      const searchVal = document.getElementById('trend-search-input').value.toLowerCase().trim();
+      
+      const filtered = trendsData.filter(item => {
+        const matchesCat = currentCategory === 'all' || item.category === currentCategory;
+        const matchesSearch = item.title.toLowerCase().includes(searchVal) || item.desc.toLowerCase().includes(searchVal);
+        return matchesCat && matchesSearch;
+      });
+
+      renderTrends(filtered);
+    }
+
+    function renderTrends(list = trendsData) {
+      const grid = document.getElementById('trends-grid');
+      const noMsg = document.getElementById('no-trends-msg');
+
+      if (list.length === 0) {
+        grid.innerHTML = '';
+        noMsg.classList.remove('hidden');
+        return;
+      }
+
+      noMsg.classList.add('hidden');
+      grid.innerHTML = list.map(item => `
+        <div class="glass-card glass-card-hover p-6 rounded-3xl transition-all duration-300 flex flex-col justify-between border border-slate-800 relative">
+          <div>
+            <!-- Status & Category Header -->
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+                ${item.category}
+              </span>
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-${item.statusColor}-500/10 text-${item.statusColor}-400 border border-${item.statusColor}-500/20">
+                ${item.status}
+              </span>
+            </div>
+
+            <!-- Title & Desc -->
+            <h3 class="text-lg font-bold text-white mb-2 hover:text-brand-400 transition-colors cursor-pointer">${item.title}</h3>
+            <p class="text-xs text-slate-400 leading-relaxed mb-4">${item.desc}</p>
+            
+            <!-- Details Collapsible Box -->
+            <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800/80 text-xs text-slate-300 mb-6">
+              <span class="font-semibold text-brand-400">Chi tiết SAN:</span> ${item.details}
+            </div>
+          </div>
+
+          <!-- Interactive Actions: Upvote Button -->
+          <div class="flex items-center justify-between pt-4 border-t border-slate-800/80">
+            <button onclick="toggleUpvote('${item.id}')" class="flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${item.userVoted ? 'bg-brand-500 text-white shadow-md shadow-brand-500/30' : 'bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white'}">
+              <i class="fa-solid fa-thumbs-up ${item.userVoted ? 'animate-bounce' : ''}"></i>
+              <span>${item.userVoted ? 'Đã Bình Chọn' : 'Bình Chọn (Upvote)'}</span>
+              <span class="ml-1 px-1.5 py-0.5 rounded-full ${item.userVoted ? 'bg-white/20 text-white' : 'bg-slate-900 text-brand-400'}">${item.upvotes}</span>
+            </button>
+
+            <button onclick="shareTrend('${item.title}')" class="w-9 h-9 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center text-xs transition-colors" title="Chia sẻ xu hướng">
+              <i class="fa-solid fa-share-nodes"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleUpvote(id) {
+      const item = trendsData.find(t => t.id === id);
+      if (item) {
+        if (item.userVoted) {
+          item.upvotes--;
+          item.userVoted = false;
+          showToast('Đã hủy bình chọn.', 'info');
+        } else {
+          item.upvotes++;
+          item.userVoted = true;
+          showToast(`Bạn đã bình chọn cho "${item.title}"!`, 'success');
+        }
+        filterTrends();
+        updateGlobalStats();
+      }
+    }
+
+    function shareTrend(title) {
+      const text = `Khám phá xu hướng SAN: ${title} tại SAN Trend Platform 2026!`;
+      if (navigator.clipboard) {
+        document.execCommand('copy');
+        showToast('Đã sao chép nội dung chia sẻ vào Clipboard!', 'success');
+      } else {
+        showToast(`Đã sao chép liên kết chia sẻ cho: ${title}`, 'success');
+      }
+    }
+
+    /* ==========================================
+       USER ENGAGEMENT & FEEDBACK LOGIC
+       ========================================== */
+    function renderNotes() {
+      const container = document.getElementById('notes-container');
+      const badge = document.getElementById('notes-badge-count');
+      badge.textContent = `${communityNotes.length} phản hồi`;
+
+      container.innerHTML = communityNotes.map(note => `
+        <div class="glass-card p-4 rounded-2xl border border-slate-800/80 hover:border-slate-700 transition-all space-y-2">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-brand-500 to-accent-purple flex items-center justify-center text-white font-bold text-xs">
+                ${note.author.charAt(0)}
+              </div>
+              <span class="text-xs font-bold text-slate-200">${note.author}</span>
+            </div>
+            <span class="text-[10px] text-slate-500">${note.time}</span>
+          </div>
+
+          <p class="text-xs text-slate-300 leading-relaxed pl-9">${note.content}</p>
+
+          <div class="flex items-center justify-between pl-9 pt-1">
+            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-slate-800 text-brand-400 border border-slate-700">
+              ${note.topic}
+            </span>
+            <button onclick="likeNote('${note.id}')" class="text-xs text-slate-400 hover:text-accent-pink flex items-center space-x-1 transition-colors">
+              <i class="fa-solid fa-heart text-accent-purple"></i>
+              <span>${note.likes}</span>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const author = document.getElementById('form-author').value;
+      const topic = document.getElementById('form-topic').value;
+      const content = document.getElementById('form-content').value;
+
+      const newNote = {
+        id: 'note-' + Date.now(),
+        author: author,
+        topic: topic,
+        content: content,
+        time: 'Vừa xong',
+        likes: 1
+      };
+
+      communityNotes.unshift(newNote);
+      renderNotes();
+      updateGlobalStats();
+
+      // Reset Form
+      document.getElementById('note-form').reset();
+      showToast('Cảm ơn đóng góp của bạn! Ý kiến đã được ghi nhận.', 'success');
+    }
+
+    function likeNote(id) {
+      const note = communityNotes.find(n => n.id === id);
+      if (note) {
+        note.likes++;
+        renderNotes();
+        showToast('Đã thích phản hồi này.', 'success');
+      }
+    }
+
+    /* ==========================================
+       MODAL & ADD NEW TREND LOGIC
+       ========================================== */
+    function openAddTrendModal() {
+      document.getElementById('add-trend-modal').classList.remove('hidden');
+    }
+
+    function closeAddTrendModal() {
+      document.getElementById('add-trend-modal').classList.add('hidden');
+    }
+
+    function handleTrendSubmit(e) {
+      e.preventDefault();
+      const title = document.getElementById('new-trend-title').value;
+      const category = document.getElementById('new-trend-cat').value;
+      const desc = document.getElementById('new-trend-desc').value;
+
+      const newTrend = {
+        id: 'trend-' + Date.now(),
+        title: title,
+        category: category,
+        status: 'Đề Xuất Mới',
+        statusColor: 'cyan',
+        upvotes: 1,
+        userVoted: true,
+        desc: desc,
+        details: 'Được đóng góp trực tiếp từ thành viên cộng đồng SAN.'
+      };
+
+      trendsData.unshift(newTrend);
+      filterTrends();
+      updateGlobalStats();
+      closeAddTrendModal();
+      showToast('Đã thêm xu hướng mới vào danh sách!', 'success');
+    }
+
+    /* ==========================================
+       STATS & UTILS
+       ========================================== */
+    function updateGlobalStats() {
+      const totalVotes = trendsData.reduce((acc, cur) => acc + cur.upvotes, 1000);
+      document.getElementById('stat-trends-count').textContent = trendsData.length;
+      document.getElementById('stat-votes-count').textContent = totalVotes.toLocaleString();
+      document.getElementById('stat-notes-count').textContent = communityNotes.length;
+    }
+
+    function showToast(msg, type = 'success') {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-message');
+      const iconBox = document.getElementById('toast-icon-box');
+
+      toastMsg.textContent = msg;
+
+      if (type === 'success') {
+        iconBox.className = "w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm";
+        iconBox.innerHTML = `<i class="fa-solid fa-check"></i>`;
+      } else {
+        iconBox.className = "w-7 h-7 rounded-lg bg-brand-500/20 text-brand-400 flex items-center justify-center text-sm";
+        iconBox.innerHTML = `<i class="fa-solid fa-info"></i>`;
+      }
+
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 3500);
+    }
+  </script>
+</body>
+</html>
